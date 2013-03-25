@@ -1,4 +1,3 @@
-
 ### Open
 
 Multiple seed outputs: More complex models?  
@@ -6,6 +5,8 @@ Currently suited for single indicator output type tasks?
 
 Consistent boxes solution?  
 Data selection dependent? Distribute input areas for train and val?
+
+Convergence to different solution types? Only in theory?
 
 Cascade Corr?
 
