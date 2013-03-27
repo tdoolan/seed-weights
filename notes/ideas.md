@@ -1,3 +1,4 @@
+
 ### Open
 
 Multiple seed outputs: More complex models?  
@@ -7,8 +8,6 @@ Consistent boxes solution?
 Data selection dependent? Distribute input areas for train and val?
 
 Convergence to different solution types? Only in theory?
-
-Cascade Corr?
 
 ### Closed
 

@@ -1,4 +1,6 @@
 
+## Todo
+
 ### Code	
 
 * Clean / check
@@ -18,3 +20,28 @@
 
 * Avg
 * RBF
+
+## Planned
+
+Avg will rescale weights  
+Questionmark data fix?
+
+Outline
+
+Fork /noio/peas
+
+Cascade Corr
+
+### Test problems
+
+* Boxes
+* Varying box shapes
+* Varying response loc
+* Combine varieties
+* Learn line detection
+
+Benchmark: Roving eye
+
+Distribute training and validation regularly  
+Provide 4 corner examples for both
+
