@@ -1,4 +1,13 @@
 
+### Assumptions
+
+* Locality (as with HyperNEAT)
+* Known = (Input V Output) + seed_dim radius
+    * Only weights to known values are updated
+    * Number of updates counted, ratio's determine relevance
+        * Instead use hold-out set to find ratio's?
+* Precomputed float output?
+
 ### Open
 
 Multiple seed outputs: More complex models?  

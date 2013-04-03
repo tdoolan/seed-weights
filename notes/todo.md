@@ -35,7 +35,7 @@ Cascade Corr
 ### Test problems
 
 * Boxes
-* Varying box shapes
+* Varying box shapes (see Gecco paper)
 * Varying response loc
 * Combine varieties
 * Learn line detection
