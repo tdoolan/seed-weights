@@ -1,21 +1,21 @@
 ## Todo
 
-### Add
+### Additions
 
 * Mark outputs as known / unknown
 * Maintain update counters / ratio's
 * Weighted average
 
-### Code	
+### Testing	
 
-* Consistency check
-* Functions for test problems
-* Comment
+* Larger training set
+* More regular training set
 
 ### Theory
 
 * Algorithm description
 * Problem formulation
+* Comments
 
 ## Planned
 
