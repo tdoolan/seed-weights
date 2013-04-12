@@ -2,15 +2,16 @@
 
 ### Additions
 
-* Mark outputs as known / unknown
+* Mark outputs as known / unknown (Substrate.converge)
 * Maintain update counters / ratio's
 * Weighted average
 
 ### Testing	
 
+* Fix bias loc
 * Larger training set
 * More regular training set
-* Fix bias loc!
+
 
 ### Theory
 
