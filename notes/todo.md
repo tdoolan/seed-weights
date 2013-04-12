@@ -1,30 +1,25 @@
-
 ## Todo
+
+### Add
+
+* Mark outputs as known / unknown
+* Maintain update counters / ratio's
+* Weighted average
 
 ### Code	
 
-* Clean / check
-* Comment	
+* Consistency check
+* Functions for test problems
+* Comment
 
-### Problem formulation
+### Theory
 
-* Different from IB?
-* Non-generated target?
-* Questionmark data (all 0.0 inputs)
-
-### Algorithm description
-
-### Test problem functions
-
-### Complexify
-
-* Avg
-* RBF
+* Algorithm description
+* Problem formulation
 
 ## Planned
 
-Avg will rescale weights  
-Questionmark data fix?
+RBF
 
 Outline
 
