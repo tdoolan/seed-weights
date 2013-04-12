@@ -10,6 +10,7 @@
 
 * Larger training set
 * More regular training set
+* Fix bias loc!
 
 ### Theory
 
