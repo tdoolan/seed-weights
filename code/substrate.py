@@ -6,6 +6,7 @@ class Substrate:
     def __init__(self, dim, seed, train=[], learn=0.9, thres=0.1):
         self.create(dim, seed)
         if train != []:
+            train = self.questionmark(train)
             print self.converge(train, learn, thres)
 
     def create(self, dim, seed):
@@ -47,6 +48,39 @@ class Substrate:
                 out[i][j] = self.nodes[(i, j, 1)].output
         return out
 
+    def questionmark(self, data):
+        marked = []
+        tot = 0
+        self.ratios = {}
+        for pair in data:
+            #Determine the nodes where input & ouput = 0
+            zerovalues = {}
+            for i in range(self.dim[0]):
+                for j in range(self.dim[1]):
+                    if (pair[0][i][j] == 0) and (pair[1][i][j] == 0):
+                        zerovalues[(i, j, 1)] = None
+                        self.ratios[(i, j, 1)] = self.ratios.get((i, j, 1), 0) + 1
+                        tot += 1 #Increment all, remove unknown at next step
+            #Remove the radius of the seed network, thus all nodes that are not
+            #surrounded by zerovalues.
+            unsure = {}
+            for elem in zerovalues.keys():
+                reject = False
+                for i in range(-self.seed.dim[0], self.seed.dim[0]+1):
+                    for j in range(-self.seed.dim[1], self.seed.dim[1]+1):
+                        if (elem[0]+i, elem[1]+j, elem[2]) not in zerovalues:
+                            reject = True
+                if not reject:
+                    unsure[elem] = None
+                    self.ratios[elem] -= 1
+                    tot -= 1
+            #Construct the new training tuple, ignore updateDw for unsure nodes
+            marked.append((pair[0], pair[1], unsure))
+        #Rescale ratios
+        for k, v in self.ratios.items():
+            self.ratios[k] = float(v) / tot
+        return marked
+
     def converge(self, train, learn, thres):
         tot = 10**6 #FIX this!
         tot_old = 10**7
@@ -57,8 +91,10 @@ class Substrate:
                 self.process(pair[0])
                 for i in range(self.dim[0]):
                     for j in range(self.dim[1]):
-                        self.nodes[(i, j, 1)].updateDw(pair[1][i][j])
-                        tot += self.nodes[(i, j, 1)].computeError(pair[1][i][j])
+                        loc = (i, j, 1)
+                        if loc not in pair[2]: #Non questionmarked
+                            self.nodes[loc].updateDw(pair[1][i][j])
+                        tot += self.nodes[loc].computeError(pair[1][i][j])
             
             for i in range(self.dim[0]):
                 for j in range(self.dim[1]):

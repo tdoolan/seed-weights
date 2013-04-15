@@ -26,6 +26,7 @@ class Sigmoid(Node):
         Node.__init__(self, loc)
         self.con = {} #{(dx,dy,dz): Connection}  #incoming cons
         self.delta = 0.0
+        self.count = 0
 
     def activate(self):
         inp = 0.0
@@ -35,6 +36,7 @@ class Sigmoid(Node):
 
     def updateDw(self, target):
         delta = (target - self.output) * (self.output*(1-self.output))
+        count += 1
         for con in self.con.values():
             con.dw += con.node.output*delta
     

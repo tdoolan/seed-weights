@@ -10,6 +10,10 @@
 
 ### Open
 
+Does increasing the seed network size adversely affect the model results due
+to a reduced number of questionmarks (and thus more 'garbage' updates)?
+**When does this happen?**
+
 Multiple seed outputs: More complex models?  
 Currently suited for single indicator output type tasks?
 
