@@ -4,13 +4,13 @@ class Seed:
     def __init__(self, init, dim=(0,0)):
         self.init = init
         self.dim = dim
-        self.bias = random.uniform(-init, init)
         
         #TODO: CasCorr = [{}, ...] #one dict (&bias) for each sigmoid!
         self.con = {} #{(dx,dy,dz): weight}
         for i in range(-dim[0], dim[0]+1):
             for j in range(-dim[1], dim[1]+1):
                 self.con[(i, j, -1)] = random.uniform(-init, init)
+        self.con[(float('inf'), float('inf'), -1)] = random.uniform(-init, init)
     
     #TODO: More complex grow functions
     def grow(self):
@@ -39,11 +39,11 @@ class Sigmoid(Node):
             con.dw += con.node.output*delta
     
     def computeError(self, target):
-        return ((target - self.output)**2) / 2
+        return ((target - self.output) ** 2) / 2
     
     def updateWeights(self, learn):
         for con in self.con.values():
-            con.weight += learn*con.dw
+            con.weight += learn * con.dw
             con.dw = 0.0
 
 class Input(Node):

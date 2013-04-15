@@ -13,8 +13,8 @@ class Substrate:
         self.seed = seed
         self.nodes = {}
         
-        bias_loc = (0,0,0) #Should be fine?
-        bias_node = Bias((-1,-1,-1))
+        bias_loc = (float('inf'), float('inf') ,0)
+        bias_node = Bias(bias_loc)
         self.nodes[bias_loc] = bias_node
 
         for i in range(dim[0]):
@@ -28,10 +28,9 @@ class Substrate:
                 node = Sigmoid(l)
                 self.nodes[l] = node
                 for k,w in seed.con.items():
-                    prev_node = self.nodes.get((i+k[0], j+k[1], 0), None)
+                    prev_node = self.nodes.get((i+k[0], j+k[1], 1+k[2]), None)
                     if prev_node != None:
                         node.con[k] = Connection(w, prev_node)
-                node.con[bias_loc] = Connection(seed.bias, bias_node)
     
     def process(self, data):
         for i in range(self.dim[0]):
@@ -65,6 +64,7 @@ class Substrate:
                 for j in range(self.dim[1]):
                     self.nodes[(i, j, 1)].updateWeights(learn)
             tot = (tot / len(train))
+            #print tot
         return tot
 
     def validate(self, val):
@@ -79,7 +79,6 @@ class Substrate:
     def modelWeights(self):
         weights = self.seed.con.keys()
         weight_store = dict(zip(weights, [[] for i in range(len(weights))]))
-        weight_store[(0,0,0)] = [] #Seed stores bias seperate
         for i in range(self.dim[0]):
             for j in range(self.dim[1]):
                 node = self.nodes[(i, j, 1)]
@@ -91,14 +90,14 @@ class Substrate:
         for loc_diff,store in weight_store.items():
             b = best([elem[1] for elem in store])
             for elem in store:
-                self.nodes[elem[0]].con[loc_diff].weight = b    
-            #print loc_diff, b
+                self.nodes[elem[0]].con[loc_diff].weight = b
+        #self.printWeights()
     
     def printWeights(self):
         sd0 = self.seed.dim[0]
         sd1 = self.seed.dim[1]
         node = self.nodes[(self.dim[0]/2, self.dim[1]/2, 1)]
-        print "\n%+.2f" % node.con[(0, 0, 0)].weight
+        print "\n%+.2f" % node.con[(float('inf'), float('inf'), -1)].weight
         for i in range(-sd0, sd0 +1):
             for j in range(-sd1, sd1 +1):
                 print "%+.2f " % node.con[(i, j, -1)].weight,

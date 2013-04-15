@@ -32,7 +32,7 @@ def orig_boxes(dim):
     for i in range(-1, 2):
         for j in range(-1, 2):
             s.con[(i, j, -1)] = 1.0
-    s.bias = -7.0
+    s.con[(float('inf'), float('inf'), -1)] = -7.0
     sub = Substrate(dim, s)
 
     data = []
@@ -53,7 +53,7 @@ def orig_boxes(dim):
     print "Data generated"
 
     l = len(data) / 125
-    seed_weights(0.3, dim, data[:l], 0.9, 0.00001, data[l:l*2], 0.0, data[l*2:])
+    seed_weights(0.3, dim, data[:l], 0.7, 0.00001, data[l:l*2], 0.0, data[l*2:])
 
 if __name__ == "__main__":
     orig_boxes((11,11))
