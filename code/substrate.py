@@ -50,17 +50,15 @@ class Substrate:
 
     def questionmark(self, data):
         marked = []
-        tot = 0
-        self.ratios = {}
+        allvalues = {}
         for pair in data:
             #Determine the nodes where input & ouput = 0
             zerovalues = {}
             for i in range(self.dim[0]):
                 for j in range(self.dim[1]):
-                    if (pair[0][i][j] == 0) and (pair[1][i][j] == 0):
+                    if (pair[0][i][j] == 0):#and (pair[1][i][j] == 0):
                         zerovalues[(i, j, 1)] = None
-                        self.ratios[(i, j, 1)] = self.ratios.get((i, j, 1), 0) + 1
-                        tot += 1 #Increment all, remove unknown at next step
+                    allvalues[(i, j, 1)] = None
             #Remove the radius of the seed network, thus all nodes that are not
             #surrounded by zerovalues.
             unsure = {}
@@ -68,17 +66,14 @@ class Substrate:
                 reject = False
                 for i in range(-self.seed.dim[0], self.seed.dim[0]+1):
                     for j in range(-self.seed.dim[1], self.seed.dim[1]+1):
-                        if (elem[0]+i, elem[1]+j, elem[2]) not in zerovalues:
+                        neigh = (elem[0]+i, elem[1]+j, elem[2])
+                        #Check if neighbour is not zero and is inside substrate
+                        if neigh not in zerovalues and neigh in allvalues:
                             reject = True
                 if not reject:
                     unsure[elem] = None
-                    self.ratios[elem] -= 1
-                    tot -= 1
             #Construct the new training tuple, ignore updateDw for unsure nodes
             marked.append((pair[0], pair[1], unsure))
-        #Rescale ratios
-        for k, v in self.ratios.items():
-            self.ratios[k] = float(v) / tot
         return marked
 
     def converge(self, train, learn, thres):
@@ -92,15 +87,15 @@ class Substrate:
                 for i in range(self.dim[0]):
                     for j in range(self.dim[1]):
                         loc = (i, j, 1)
-                        if loc not in pair[2]: #Non questionmarked
-                            self.nodes[loc].updateDw(pair[1][i][j])
+                        #if loc not in pair[2]: #Non questionmarked
+                        self.nodes[loc].updateDw(pair[1][i][j], pair[2])
                         tot += self.nodes[loc].computeError(pair[1][i][j])
             
             for i in range(self.dim[0]):
                 for j in range(self.dim[1]):
                     self.nodes[(i, j, 1)].updateWeights(learn)
             tot = (tot / len(train))
-            #print tot
+            print tot
         return tot
 
     def validate(self, val):
@@ -117,6 +112,26 @@ class Substrate:
         weight_store = dict(zip(weights, [[] for i in range(len(weights))]))
         for i in range(self.dim[0]):
             for j in range(self.dim[1]):
+                loc = (i, j, 1)
+                node = self.nodes[loc]
+                for loc_diff in weight_store.keys():
+                    if loc_diff in node.con:
+                        weight_store[loc_diff].append((loc,
+                            node.con[loc_diff].weight, self.counts[loc]))
+        #Store: Location, Weight, Update count
+        #Recompute all weights according to update ratios
+        for loc_diff,store in weight_store.items(): 
+            total = sum((elem[2] for elem in store))
+            weight = sum((elem[1]*(float(elem[2])/total) for elem in store))
+            for elem in store:
+                self.nodes[elem[0]].con[loc_diff].weight = weight
+        self.printWeights()
+    
+    """def modelWeights(self): #Max
+        weights = self.seed.con.keys()
+        weight_store = dict(zip(weights, [[] for i in range(len(weights))]))
+        for i in range(self.dim[0]):
+            for j in range(self.dim[1]):
                 node = self.nodes[(i, j, 1)]
                 for loc_diff in weight_store.keys():
                     if loc_diff in node.con:
@@ -127,7 +142,7 @@ class Substrate:
             b = best([elem[1] for elem in store])
             for elem in store:
                 self.nodes[elem[0]].con[loc_diff].weight = b
-        #self.printWeights()
+        self.printWeights()"""
     
     def printWeights(self):
         sd0 = self.seed.dim[0]

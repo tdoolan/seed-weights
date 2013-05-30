@@ -14,11 +14,14 @@ Does increasing the seed network size adversely affect the model results due
 to a reduced number of questionmarks (and thus more 'garbage' updates)?
 **When does this happen?**
 
-Multiple seed outputs: More complex models?  
-Currently suited for single indicator output type tasks?
+Ratios currently only over output nodes. Model seperately for inputs? More
+accurate informed updates, but partial with respect to output node.
 
 Consistent boxes solution?  
 Data selection dependent? Distribute input areas for train and val?
+
+Multiple seed outputs: More complex models?  
+Currently suited for single indicator output type tasks?
 
 Convergence to different solution types? Only in theory?
 

@@ -3,7 +3,7 @@ from substrate import *
 
 #Seed-network based weight-sharing
 def seed_weights(init, dim, train, learn, thres, val, margin, test):
-    seed1 = Seed(init)
+    seed1 = Seed(init, (1,1))
     sub1 = Substrate(dim, seed1, train, learn, thres)
     print "Reg Val", sub1.validate(val)
     sub1.modelWeights()
@@ -40,20 +40,22 @@ def orig_boxes(dim):
         for j in range(dim[1] - 2):
             for x in range(dim[0]):
                 for y in range(dim[1]):
-                    if (x < i or x > i+2) and (y < j or y > j+2):
-                        inp = [[0.0]*dim[1] for q in range(dim[0])]
+                    if (x < i or x > i+2) or (y < j or y > j+2):
+                        inp = [[0]*dim[1] for q in range(dim[0])]
                         for di in range(3):
                             for dj in range(3):
-                                inp[i+di][j+dj] = 1.0
-                        inp[x][y] = 1.0
+                                inp[i+di][j+dj] = 1
+                        inp[x][y] = 1
                         sub.process(inp)
                         data.append((inp, sub.getOutput()))
-    
+                        """out = [[0]*dim[1] for q in range(dim[0])]
+                        out[i+1][j+1] = 1
+                        data.append((inp, out))"""
     random.shuffle(data)
-    print "Data generated"
+    print "Data generated", len(data)
 
     l = len(data) / 125
-    seed_weights(0.3, dim, data[:l], 0.7, 0.00001, data[l:l*2], 0.0, data[l*2:])
+    seed_weights(0.3, dim, data[:l], 0.9, 0.0001, data[l:l*2], 0.0, data[l*2:])
 
 if __name__ == "__main__":
     orig_boxes((11,11))

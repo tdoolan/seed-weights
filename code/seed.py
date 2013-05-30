@@ -34,11 +34,15 @@ class Sigmoid(Node):
             inp += con.weight * con.node.output
         self.output = 1.0 / (1 + math.exp(-inp))
 
-    def updateDw(self, target):
+    def updateDw(self, target, zeros):
         delta = (target - self.output) * (self.output*(1-self.output))
-        count += 1
-        for con in self.con.values():
-            con.dw += con.node.output*delta
+        #count += 1
+        for dc, con in self.con.items():
+            #Combine (x,y,z) and (dx, dy, dz)
+            #CONTINUE HERE
+            nl = tuple([sum(q) for q in zip(self.loc, dc)])
+            if nl not in zeros:
+                con.dw += con.node.output*delta
     
     def computeError(self, target):
         return ((target - self.output) ** 2) / 2
